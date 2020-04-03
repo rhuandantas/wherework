@@ -3,10 +3,10 @@ const { Spot, User } = require('../models');
 const save = async (req, res) => {
     try {
         const { filename } = req.file;
-        const { userId } = req.headers;
+        const { userid } = req.headers;
         const { company, techs, price } = req.body;
 
-        const user = await User.findById(userId);
+        const user = await User.findById(userid);
 
         if (!user) return res.status(400).json("User not found");
 
@@ -15,7 +15,7 @@ const save = async (req, res) => {
             company,
             price,
             techs: stringToArray(techs),
-            user: userId
+            user: userid
         });
         return res.status(201).json(spot);
     } catch (error) {
@@ -27,7 +27,7 @@ const getByTechs = async (req, res) => {
     try {
         const { tech } = req.query;
         const spots = await Spot.find({
-            techs: tech
+            techs: tech.toLowerCase()
         });
 
         return res.json(spots)
